@@ -22,7 +22,7 @@ export const deploy = async (client: Client, src = ".") => {
     .container()
     .from("ruby:2.7.8-alpine3.16")
     .withExec(["apk", "update"])
-    .withExec(["apk", "add", "nodejs", "git"])
+    .withExec(["apk", "add", "nodejs", "git", "make", "gcc", "g++"])
     .withExec(["gem", "install", "dpl", "--pre"])
     .withDirectory("/app", context, {
       exclude: [".git", ".devbox", "node_modules", ".fluentci"],
