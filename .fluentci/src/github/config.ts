@@ -4,7 +4,7 @@ export function generateYaml() {
   const workflow = new Workflow("Codecov");
 
   const push = {
-    branches: ["master"],
+    branches: ["main"],
   };
 
   const setupDagger = `\
