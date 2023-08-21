@@ -2,7 +2,7 @@
 
 [![deno module](https://shield.deno.dev/x/heroku_pipeline)](https://deno.land/x/heroku_pipeline)
 ![deno compatibility](https://shield.deno.dev/deno/^1.34)
-[![](https://img.shields.io/codecov/c/gh/fluent-ci-templates/herkou-pipeline)](https://codecov.io/gh/fluent-ci-templates/heroku-pipeline)
+[![](https://img.shields.io/codecov/c/gh/fluent-ci-templates/heroku-pipeline)](https://codecov.io/gh/fluent-ci-templates/heroku-pipeline)
 
 The following command will generate a `buildspec.yml` file in your project:
 
