@@ -31,7 +31,7 @@ dagger version`,
       },
       {
         run: {
-          name: "Upload Coverage",
+          name: "Run Dagger Pipelines",
           command: "dagger run fluentci heroku_pipeline",
         },
       },
