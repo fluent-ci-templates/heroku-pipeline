@@ -4,6 +4,8 @@ export enum Job {
   deploy = "deploy",
 }
 
+export const exclude = [".git", ".devbox", "node_modules", ".fluentci"];
+
 export const deploy = async (client: Client, src = ".") => {
   const context = client.host().directory(src);
 
@@ -24,9 +26,7 @@ export const deploy = async (client: Client, src = ".") => {
     .withExec(["apk", "update"])
     .withExec(["apk", "add", "nodejs", "git", "make", "gcc", "g++"])
     .withExec(["gem", "install", "dpl", "--pre"])
-    .withDirectory("/app", context, {
-      exclude: [".git", ".devbox", "node_modules", ".fluentci"],
-    })
+    .withDirectory("/app", context, { exclude })
     .withWorkdir("/app")
     .withEnvVariable("HEROKU_API_KEY", Deno.env.get("HEROKU_API_KEY")!)
     .withEnvVariable("HEROKU_APP_NAME", Deno.env.get("HEROKU_APP_NAME")!)
