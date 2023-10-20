@@ -1,0 +1,5 @@
+{
+  "root": "",
+  "name": "heroku",
+  "sdkRuntime": "tsiry/dagger-sdk-deno"
+}
