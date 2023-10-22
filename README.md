@@ -2,7 +2,7 @@
 
 [![fluentci pipeline](https://img.shields.io/badge/dynamic/json?label=pkg.fluentci.io&labelColor=%23000&color=%23460cf1&url=https%3A%2F%2Fapi.fluentci.io%2Fv1%2Fpipeline%2Fheroku_pipeline&query=%24.version)](https://pkg.fluentci.io/heroku_pipeline)
 [![deno module](https://shield.deno.dev/x/heroku_pipeline)](https://deno.land/x/heroku_pipeline)
-![deno compatibility](https://shield.deno.dev/deno/^1.34)
+![deno compatibility](https://shield.deno.dev/deno/^1.37)
 [![](https://img.shields.io/codecov/c/gh/fluent-ci-templates/heroku-pipeline)](https://codecov.io/gh/fluent-ci-templates/heroku-pipeline)
 
 A ready-to-use CI/CD Pipeline for deploying your applications to [Heroku](https://www.heroku.com).
@@ -33,15 +33,7 @@ dagger run fluentci heroku_pipeline
 You can also use this pipeline programmatically:
 
 ```typescript
-import Client, { connect } from "https://sdk.fluentci.io/v0.1.9/mod.ts";
-import { deploy } from "https://pkg.fluentci.io/heroku_pipeline@v0.5.1/mod.ts";
+import { deploy } from "https://pkg.fluentci.io/heroku_pipeline@v0.6.0/mod.ts";
 
-function pipeline(src = ".") {
-  connect(async (client: Client) => {
-    await deploy(client, src);
-  });
-}
-
-pipeline();
-
+await deploy();
 ```

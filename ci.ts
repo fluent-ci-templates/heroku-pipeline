@@ -1,12 +1,3 @@
-const command = new Deno.Command(Deno.execPath(), {
-  args: [
-    "run",
-    "-A",
-    "--import-map=https://deno.land/x/heroku_pipeline/import_map.json",
-    "https://deno.land/x/heroku_pipeline/src/dagger/runner.ts",
-  ],
-});
+import { deploy } from "https://pkg.fluentci.io/heroku_pipeline@v0.6.0/mod.ts";
 
-const { stdout } = await command.output();
-
-console.log(new TextDecoder().decode(stdout));
+await deploy();
