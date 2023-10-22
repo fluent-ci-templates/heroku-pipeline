@@ -28,6 +28,14 @@ dagger run fluentci heroku_pipeline
 |---------|-----------------------------------|
 | deploy  | Deploys your application to Heroku. |
 
+```graphql
+deploy(
+  apiKey: String!, 
+  appName: String!, 
+  src: String!
+): String
+```
+
 ## Programmatic usage
 
 You can also use this pipeline programmatically:
