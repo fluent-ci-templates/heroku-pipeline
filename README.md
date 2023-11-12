@@ -41,7 +41,7 @@ deploy(
 You can also use this pipeline programmatically:
 
 ```typescript
-import { deploy } from "https://pkg.fluentci.io/heroku_pipeline@v0.6.0/mod.ts";
+import { deploy } from "https://pkg.fluentci.io/heroku_pipeline@v0.6.1/mod.ts";
 
 await deploy();
 ```
