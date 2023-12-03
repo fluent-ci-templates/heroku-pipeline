@@ -10,7 +10,7 @@ export const exclude = [".git", ".devbox", "node_modules", ".fluentci"];
 
 /**
  * @function
- * @description Deploy a directory to Heroku
+ * @description Deploy to Heroku
  * @param {Directory | string} src The directory to deploy
  * @param {Secret | string} apiKey The Heroku API key
  * @param {string} appName The Heroku app name
