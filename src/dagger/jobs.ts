@@ -1,4 +1,6 @@
-import { connect } from "../../deps.ts";
+import Client, { Directory, Secret } from "../../deps.ts";
+import { connect } from "../../sdk/connect.ts";
+import { getDirectory, getHerokuApiKey } from "./lib.ts";
 
 export enum Job {
   deploy = "deploy",
@@ -6,17 +8,29 @@ export enum Job {
 
 export const exclude = [".git", ".devbox", "node_modules", ".fluentci"];
 
-export const deploy = async (src = ".", apiKey?: string, appName?: string) => {
-  await connect(async (client) => {
-    const context = client.host().directory(src);
-
-    if (!Deno.env.get("HEROKU_API_KEY") && !apiKey) {
-      console.log("HEROKU_API_KEY not set");
+/**
+ * @function
+ * @description Deploy a directory to Heroku
+ * @param {Directory | string} src The directory to deploy
+ * @param {Secret | string} apiKey The Heroku API key
+ * @param {string} appName The Heroku app name
+ * @returns {Promise<string>}
+ */
+export async function deploy(
+  src: Directory | string,
+  apiKey: Secret | string,
+  appName: string
+): Promise<string> {
+  await connect(async (client: Client) => {
+    const context = getDirectory(client, src);
+    const secret = getHerokuApiKey(client, apiKey);
+    if (!secret) {
+      console.error("HEROKU_API_KEY not set");
       Deno.exit(1);
     }
 
     if (!Deno.env.get("HEROKU_APP_NAME") && !appName) {
-      console.log("HEROKU_APP_NAME not set");
+      console.error("HEROKU_APP_NAME not set");
       Deno.exit(1);
     }
 
@@ -29,10 +43,7 @@ export const deploy = async (src = ".", apiKey?: string, appName?: string) => {
       .withExec(["gem", "install", "dpl", "--pre"])
       .withDirectory("/app", context, { exclude })
       .withWorkdir("/app")
-      .withEnvVariable(
-        "HEROKU_API_KEY",
-        Deno.env.get("HEROKU_API_KEY") || apiKey!
-      )
+      .withSecretVariable("HEROKU_API_KEY", secret)
       .withEnvVariable(
         "HEROKU_APP_NAME",
         Deno.env.get("HEROKU_APP_NAME") || appName!
@@ -47,22 +58,13 @@ export const deploy = async (src = ".", apiKey?: string, appName?: string) => {
     console.log(result);
   });
   return "Done";
-};
+}
 
 export type JobExec = (
-  src?: string,
-  apiKey?: string,
-  appName?: string
-) =>
-  | Promise<string>
-  | ((
-      src?: string,
-      apiKey?: string,
-      appName?: string,
-      options?: {
-        ignore: string[];
-      }
-    ) => Promise<string>);
+  src: Directory | string,
+  apiKey: Secret | string,
+  appName: string
+) => Promise<string>;
 
 export const runnableJobs: Record<Job, JobExec> = {
   [Job.deploy]: deploy,

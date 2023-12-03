@@ -15,6 +15,14 @@ Run the following command:
 dagger run fluentci heroku_pipeline
 ```
 
+## Dagger Module
+
+Use as a [Dagger](https://dagger.io) Module:
+
+```bash
+dagger mod install github.com/fluent-ci-templates/heroku-pipeline@mod
+```
+
 ## Environment Variables
 
 | Variable        | Description         |
@@ -28,12 +36,12 @@ dagger run fluentci heroku_pipeline
 |---------|-----------------------------------|
 | deploy  | Deploys your application to Heroku. |
 
-```graphql
+```typescript
 deploy(
-  apiKey: String!, 
-  appName: String!, 
-  src: String!
-): String
+  src: Directory | string,
+  apiKey: Secret | string,
+  appName: string
+): Promise<string>
 ```
 
 ## Programmatic usage
@@ -43,5 +51,9 @@ You can also use this pipeline programmatically:
 ```typescript
 import { deploy } from "https://pkg.fluentci.io/heroku_pipeline@v0.6.1/mod.ts";
 
-await deploy();
+await deploy(
+  ".", 
+  Deno.env.get("HEROKU_API_KEY")!, 
+  Deno.env.get("HEROKU_APP_NAME")!
+);
 ```

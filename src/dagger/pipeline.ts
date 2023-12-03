@@ -13,7 +13,11 @@ export default async function pipeline(src = ".", args: string[] = []) {
     return;
   }
 
-  await deploy(src);
+  await deploy(
+    src,
+    Deno.env.get("HEROKU_API_KEY")!,
+    Deno.env.get("HEROKU_APP_NAME")!
+  );
 }
 
 async function runSpecificJobs(src: string, args: jobs.Job[]) {
@@ -22,6 +26,10 @@ async function runSpecificJobs(src: string, args: jobs.Job[]) {
     if (!job) {
       throw new Error(`Job ${name} not found`);
     }
-    await job(src);
+    await job(
+      src,
+      Deno.env.get("HEROKU_API_KEY")!,
+      Deno.env.get("HEROKU_APP_NAME")!
+    );
   }
 }
