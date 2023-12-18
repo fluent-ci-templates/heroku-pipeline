@@ -21,6 +21,7 @@ export async function deploy(
   apiKey: Secret | string,
   appName: string
 ): Promise<string> {
+  let result = "";
   await connect(async (client: Client) => {
     const context = getDirectory(client, src);
     const secret = getHerokuApiKey(client, apiKey);
@@ -53,11 +54,9 @@ export async function deploy(
         "-c",
         "dpl heroku api --app $HEROKU_APP_NAME --api_key $HEROKU_API_KEY",
       ]);
-    const result = await ctr.stdout();
-
-    console.log(result);
+    result = await ctr.stdout();
   });
-  return "Done";
+  return result;
 }
 
 export type JobExec = (
