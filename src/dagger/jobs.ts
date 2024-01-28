@@ -1,5 +1,4 @@
-import Client, { Directory, Secret } from "../../deps.ts";
-import { connect } from "../../sdk/connect.ts";
+import { Directory, Secret, dag } from "../../deps.ts";
 import { getDirectory, getHerokuApiKey } from "./lib.ts";
 
 export enum Job {
@@ -21,41 +20,38 @@ export async function deploy(
   apiKey: Secret | string,
   appName: string
 ): Promise<string> {
-  let result = "";
-  await connect(async (client: Client) => {
-    const context = getDirectory(client, src);
-    const secret = getHerokuApiKey(client, apiKey);
-    if (!secret) {
-      console.error("HEROKU_API_KEY not set");
-      Deno.exit(1);
-    }
+  const context = await getDirectory(dag, src);
+  const secret = await getHerokuApiKey(dag, apiKey);
+  if (!secret) {
+    console.error("HEROKU_API_KEY not set");
+    Deno.exit(1);
+  }
 
-    if (!Deno.env.get("HEROKU_APP_NAME") && !appName) {
-      console.error("HEROKU_APP_NAME not set");
-      Deno.exit(1);
-    }
+  if (!Deno.env.get("HEROKU_APP_NAME") && !appName) {
+    console.error("HEROKU_APP_NAME not set");
+    Deno.exit(1);
+  }
 
-    const ctr = client
-      .pipeline(Job.deploy)
-      .container()
-      .from("ruby:2.7.8-alpine3.16")
-      .withExec(["apk", "update"])
-      .withExec(["apk", "add", "nodejs", "git", "make", "gcc", "g++"])
-      .withExec(["gem", "install", "dpl", "--pre"])
-      .withDirectory("/app", context, { exclude })
-      .withWorkdir("/app")
-      .withSecretVariable("HEROKU_API_KEY", secret)
-      .withEnvVariable(
-        "HEROKU_APP_NAME",
-        Deno.env.get("HEROKU_APP_NAME") || appName!
-      )
-      .withExec([
-        "sh",
-        "-c",
-        "dpl heroku api --app $HEROKU_APP_NAME --api_key $HEROKU_API_KEY",
-      ]);
-    result = await ctr.stdout();
-  });
+  const ctr = dag
+    .pipeline(Job.deploy)
+    .container()
+    .from("ruby:2.7.8-alpine3.16")
+    .withExec(["apk", "update"])
+    .withExec(["apk", "add", "nodejs", "git", "make", "gcc", "g++"])
+    .withExec(["gem", "install", "dpl", "--pre"])
+    .withDirectory("/app", context, { exclude })
+    .withWorkdir("/app")
+    .withSecretVariable("HEROKU_API_KEY", secret)
+    .withEnvVariable(
+      "HEROKU_APP_NAME",
+      Deno.env.get("HEROKU_APP_NAME") || appName!
+    )
+    .withExec([
+      "sh",
+      "-c",
+      "dpl heroku api --app $HEROKU_APP_NAME --api_key $HEROKU_API_KEY",
+    ]);
+  const result = await ctr.stdout();
   return result;
 }
 
