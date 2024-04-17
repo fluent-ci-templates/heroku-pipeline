@@ -20,8 +20,8 @@ export async function deploy(
   apiKey: Secret | string,
   appName: string
 ): Promise<string> {
-  const context = await getDirectory(dag, src);
-  const secret = await getHerokuApiKey(dag, apiKey);
+  const context = await getDirectory(src);
+  const secret = await getHerokuApiKey(apiKey);
   if (!secret) {
     console.error("HEROKU_API_KEY not set");
     Deno.exit(1);
