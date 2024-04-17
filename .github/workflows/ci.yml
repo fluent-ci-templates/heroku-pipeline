@@ -20,6 +20,9 @@ jobs:
             lint
             test
             coverage
+      - name: Run Dagger Pipelines
+        run: |
+          dagger -m github.com/fluent-ci-templates/heroku-pipeline@main functions
       - name: Upload to Codecov
         run: fluentci run --wasm codecov upload
         env:

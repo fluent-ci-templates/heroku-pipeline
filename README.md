@@ -20,7 +20,7 @@ dagger run fluentci heroku_pipeline
 Use as a [Dagger](https://dagger.io) Module:
 
 ```bash
-dagger mod install github.com/fluent-ci-templates/heroku-pipeline@mod
+dagger mod install github.com/fluent-ci-templates/heroku-pipeline@main
 ```
 
 ## Environment Variables
@@ -49,7 +49,7 @@ deploy(
 You can also use this pipeline programmatically:
 
 ```typescript
-import { deploy } from "https://pkg.fluentci.io/heroku_pipeline@v0.7.1/mod.ts";
+import { deploy } from "https://pkg.fluentci.io/heroku_pipeline@v0.8.0/mod.ts";
 
 await deploy(
   ".", 
