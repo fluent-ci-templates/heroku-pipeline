@@ -1,0 +1,22 @@
+name: Example
+on:
+  push:
+    branches:
+      - main
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup example
+        run: |
+          mkdir -p example/.fluentci
+          cp -r plugin example/.fluentci
+      - name: Setup Fluent CI CLI
+        uses: fluentci-io/setup-fluentci@v5
+        with:
+          wasm: true
+          plugin: .
+          args: |
+            "deploy --help"
+          working-directory: example
